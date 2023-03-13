@@ -63,15 +63,23 @@ export const getTicketById = createAsyncThunk(
 
 export const addNewNoteToTicket = createAsyncThunk(
   "tickets/addNewNoteToTicket",
-  async (data, thunkApi) => {
+  async ({ id, note }, thunkApi) => {
     try {
       const token = thunkApi.getState().auth.user.token;
-      return await ticketService.addNewNoteToTicket(
-        data.id,
-        data.note,
-        data.createdBy,
-        token
-      );
+      return await ticketService.addNewNoteToTicket(id, note, token);
+    } catch (error) {
+      const errorMessage = error.response.data.message;
+      return thunkApi.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const removeNoteFromTicket = createAsyncThunk(
+  "tickets/removeNoteFromTicket",
+  async ({ id, noteId }, thunkApi) => {
+    try {
+      const token = thunkApi.getState().auth.user.token;
+      return await ticketService.removeNoteFromTicket(id, noteId, token);
     } catch (error) {
       const errorMessage = error.response.data.message;
       return thunkApi.rejectWithValue(errorMessage);
@@ -147,7 +155,7 @@ export const ticketSlice = createSlice({
         state.isError = true;
         state.errorMessage = action.payload;
       });
-      
+
     builder
       .addCase(addNewNoteToTicket.pending, (state) => {
         state.isLoading = true;
@@ -157,6 +165,20 @@ export const ticketSlice = createSlice({
         state.ticket = action.payload;
       })
       .addCase(addNewNoteToTicket.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.errorMessage = action.payload;
+      });
+
+    builder
+      .addCase(removeNoteFromTicket.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(removeNoteFromTicket.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.ticket = action.payload;
+      })
+      .addCase(removeNoteFromTicket.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.errorMessage = action.payload;

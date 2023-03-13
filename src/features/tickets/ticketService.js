@@ -59,14 +59,14 @@ export const getTicketById = async (id, token) => {
     return response.data;
 };
 
-export const addNewNoteToTicket = async (id, note, createdBy, token) => {
+export const addNewNoteToTicket = async (id, note, token) => {
     const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
     
-      const data = { ...note, createdBy };
+      const data = { ...note };
     
       const response = await axios.put(
         `${ticketUrl}/${id}/new-note`,
@@ -77,12 +77,28 @@ export const addNewNoteToTicket = async (id, note, createdBy, token) => {
       return response.data;
 };
 
+export const removeNoteFromTicket = async (id, noteId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.delete(
+        `${ticketUrl}/${id}/remove-note/${noteId}`,
+        config
+    );
+
+    return response.data;
+};
+
 const ticketService = {
     getOpenTickets,
     getClosedTickets,
     getInProgressTickets,
     getTicketById,
     addNewNoteToTicket,
+    removeNoteFromTicket,
 };
 
 export default ticketService;
