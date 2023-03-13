@@ -11,24 +11,52 @@ const ticketUrl = "/api/tickets";
     PUT /:id/new-note -> add a new note to a ticket
 */
 
-export const getOpenTickets = async () => {
-    const { data } = await axios.get(`${ticketUrl}/status/open`);
-    return data;
+export const getOpenTickets = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.get(`${ticketUrl}/status/open`, config);
+
+    return response.data;
 };
 
-export const getClosedTickets = async () => {
-    const { data } = await axios.get(`${ticketUrl}/status/closed`);
-    return data;
+export const getClosedTickets = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.get(`${ticketUrl}/status/closed`, config);
+
+    return response.data;
 };
 
-export const getInProgressTickets = async () => {
-    const { data } = await axios.get(`${ticketUrl}/status/in-progress`);
-    return data;
+export const getInProgressTickets = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.get(`${ticketUrl}/status/in-progress`, config);
+
+    return response.data;
 };
 
-export const getTicketById = async (id) => {
-    const { data } = await axios.get(`${ticketUrl}/${id}`);
-    return data;
+export const getTicketById = async (id, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.get(`${ticketUrl}/${id}`, config);
+
+    return response.data;
 };
 
 export const addNewNoteToTicket = async (id, note, createdBy, token) => {

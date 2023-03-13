@@ -7,6 +7,8 @@ import ProtectedRoute from "./components/shared/ProtectedRoute";
 
 // Protect pages
 import Dashboard from "./pages/Dashboard";
+import ActiveTickets from "./pages/ActiveTickets";
+import TicketDetails from "./pages/TicketDetails";
 
 function App() {
   return (
@@ -16,6 +18,14 @@ function App() {
           <Route path="/" element={<IndexPage />} />
           <Route path="/dashboard" element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+
+          <Route path="/active-tickets" element={<ProtectedRoute />}>
+            <Route path="/active-tickets" element={<ActiveTickets />} />
+          </Route>
+
+          <Route path="/ticket/:ticketId" element={<ProtectedRoute />}>
+            <Route path="/ticket/:ticketId" element={<TicketDetails />} />
           </Route>
 
           <Route

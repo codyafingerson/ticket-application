@@ -25,7 +25,7 @@ function Navbar() {
       <div id="sidebar">
         {/* Sidebar Content */}
         <Link to="/dashboard">Dashboard</Link>
-        <Link to="#">Open Tickets</Link>
+        <Link to="/active-tickets">Open Tickets</Link>
         {user.isAdmin && (
           <>
             <Link to="#">All Tickets</Link>
