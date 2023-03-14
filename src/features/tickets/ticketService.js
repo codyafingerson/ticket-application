@@ -11,6 +11,18 @@ const ticketUrl = "/api/tickets";
     PUT /:id/new-note -> add a new note to a ticket
 */
 
+export const createTicket = async (ticketData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.post(`${ticketUrl}`, ticketData, config);
+
+    return response.data;
+}
+
 export const getOpenTickets = async (token) => {
     const config = {
         headers: {
@@ -104,7 +116,26 @@ export const deleteTicket = async (id, token) => {
     return response.data;
 }
 
+export const addStationDetails = async (id, stationDetails, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const data = { ...stationDetails };
+
+    const response = await axios.put(
+        `${ticketUrl}/${id}/update-station`,
+        data,
+        config
+    );
+
+    return response.data;
+};
+
 const ticketService = {
+    createTicket,
     getOpenTickets,
     getClosedTickets,
     getInProgressTickets,

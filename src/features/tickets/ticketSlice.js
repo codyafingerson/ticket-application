@@ -5,6 +5,7 @@ const initialState = {
   tickets: [],
   ticket: {},
   isError: false,
+  isSuccess: false,
   isLoading: false,
   errorMessage: "",
 };
@@ -103,6 +104,32 @@ export const deleteTicket = createAsyncThunk(
   }
 );
 
+export const createTicket = createAsyncThunk(
+  "tickets/createTicket",
+  async (ticketData, thunkApi) => {
+    try {
+      const token = thunkApi.getState().auth.user.token;
+      return await ticketService.createTicket(ticketData, token);
+    } catch (error) {
+      const errorMessage = error.response.data.message;
+      return thunkApi.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const addStationDetails = createAsyncThunk(
+  "tickets/addStationDetails",
+  async (ticketData, thunkApi) => {
+    try {
+      const token = thunkApi.getState().auth.user.token;
+      return await ticketService.addStationDetails(ticketData, token);
+    } catch (error) {
+      const errorMessage = error.response.data.message;
+      return thunkApi.rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const ticketSlice = createSlice({
   name: "tickets",
   initialState,
@@ -111,6 +138,7 @@ export const ticketSlice = createSlice({
       state.tickets = [];
       state.ticket = {};
       state.isError = false;
+      state.isSuccess = false;
       state.isLoading = false;
       state.errorMessage = "";
     },
@@ -122,6 +150,7 @@ export const ticketSlice = createSlice({
       })
       .addCase(getAllTickets.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isSuccess = true;
         state.tickets = action.payload;
       })
       .addCase(getAllTickets.rejected, (state, action) => {
@@ -136,6 +165,7 @@ export const ticketSlice = createSlice({
       })
       .addCase(getInProgressTickets.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isSuccess = true;
         state.tickets = action.payload;
       })
       .addCase(getInProgressTickets.rejected, (state, action) => {
@@ -150,6 +180,7 @@ export const ticketSlice = createSlice({
       })
       .addCase(getTicketById.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isSuccess = true;
         state.ticket = action.payload;
       })
       .addCase(getTicketById.rejected, (state, action) => {
@@ -164,6 +195,7 @@ export const ticketSlice = createSlice({
       })
       .addCase(addNewNoteToTicket.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isSuccess = true;
         state.ticket = action.payload;
       })
       .addCase(addNewNoteToTicket.rejected, (state, action) => {
@@ -178,6 +210,7 @@ export const ticketSlice = createSlice({
       })
       .addCase(removeNoteFromTicket.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isSuccess = true;
         state.ticket = action.payload;
       })
       .addCase(removeNoteFromTicket.rejected, (state, action) => {
@@ -192,9 +225,38 @@ export const ticketSlice = createSlice({
       })
       .addCase(deleteTicket.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isSuccess = true;
         state.ticket = action.payload;
       })
       .addCase(deleteTicket.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.errorMessage = action.payload;
+      });
+
+    builder
+      .addCase(createTicket.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createTicket.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.ticket = action.payload;
+      })
+      .addCase(createTicket.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.errorMessage = action.payload;
+      });
+
+    builder
+      .addCase(addStationDetails.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addStationDetails.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.ticket = action.payload;
+      })
+      .addCase(addStationDetails.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.errorMessage = action.payload;

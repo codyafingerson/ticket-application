@@ -6,7 +6,9 @@ import {
   getTicketById,
   addNewNoteToTicket,
   removeNoteFromTicket,
-  deleteTicket
+  deleteTicket,
+  addStationDetails,
+  resetState
 } from "../features/tickets/ticketSlice";
 
 import MainContainer from "../components/shared/MainContainer";
@@ -60,10 +62,12 @@ function TicketDetails() {
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this ticket?")) {
       dispatch(deleteTicket(ticketId));
+      dispatch(resetState());
       navigate(-1);
     }
   };
-
+  
+  
 
   // if (isLoading) return <Spinner />;
 
@@ -150,7 +154,7 @@ function TicketDetails() {
                   <td>{s.completedBy}</td>
                   <td>{s.timeTaken}</td>
                   <td>
-                    {new Date(s.dateCompleted).toLocaleDateString("en-US")}
+                    {s.dateCompleted != null ? new Date(s.dateCompleted).toLocaleDateString("en-US") : ""}
                   </td>
                 </tr>
               ))}

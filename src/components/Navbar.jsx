@@ -72,9 +72,10 @@ function Navbar() {
                 <i className="fa fa-caret-down" />
               </button>
               <div className="dropdown-content">
-                <Link to="#">Create User</Link>
+                <Link to="/create-user">Create User</Link>
                 <Link to="#">View Users</Link>
-                <Link to="#">Create Product</Link>
+                <Link to="/create-product">Create Product</Link>
+                <Link to="/create-ticket">Create Ticket</Link>
               </div>
             </div>
           </>

@@ -12,6 +12,9 @@ import TicketDetails from "./pages/TicketDetails";
 
 // Admin pages
 import AllTickets from "./pages/AllTickets";
+import CreateTicket from "./pages/CreateTicket";
+import CreateProduct from "./pages/CreateProduct";
+import CreateUser from "./pages/CreateUser";
 
 function App() {
   return (
@@ -35,6 +38,18 @@ function App() {
             <Route path="/all-tickets" element={<AllTickets />} />
           </Route>
 
+          <Route path="/create-ticket" element={<ProtectedRoute adminRoute={true}/>}>
+            <Route path="/create-ticket" element={<CreateTicket />} />
+          </Route>
+
+          <Route path="/create-product" element={<ProtectedRoute adminRoute={true}/>}>
+            <Route path="/create-product" element={<CreateProduct />} />
+          </Route>
+
+          <Route path="/create-user" element={<ProtectedRoute adminRoute={true}/>}>
+            <Route path="/create-user" element={<CreateUser />} />
+          </Route>
+          
           <Route
             path="/not-authorized"
             element={<h1>User not authorized</h1>}
