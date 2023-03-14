@@ -9,25 +9,28 @@ const initialState = {
   errorMessage: "",
 };
 
-export const getOpenTickets = createAsyncThunk(
-  "tickets/getOpenTickets",
+export const getAllTickets = createAsyncThunk(
+  "tickets/getAllTickets",
   async (_, thunkApi) => {
     try {
       const token = thunkApi.getState().auth.user.token;
-      return await ticketService.getOpenTickets(token);
-    } catch (error) {
-      const errorMessage = error.response.data.message;
-      return thunkApi.rejectWithValue(errorMessage);
-    }
-  }
-);
+      const openTickets = await ticketService.getOpenTickets(token);
+      const closedTickets = await ticketService.getClosedTickets(token);
+      const inProgressTickets = await ticketService.getInProgressTickets(token);
 
-export const getClosedTickets = createAsyncThunk(
-  "tickets/getClosedTickets",
-  async (_, thunkApi) => {
-    try {
-      const token = thunkApi.getState().auth.user.token;
-      return await ticketService.getClosedTickets(token);
+      // Check if any of the arrays are empty before concatenating them
+      const allTickets = [];
+      if (openTickets.length > 0) {
+        allTickets.push(...openTickets);
+      }
+      if (closedTickets.length > 0) {
+        allTickets.push(...closedTickets);
+      }
+      if (inProgressTickets.length > 0) {
+        allTickets.push(...inProgressTickets);
+      }
+
+      return allTickets;
     } catch (error) {
       const errorMessage = error.response.data.message;
       return thunkApi.rejectWithValue(errorMessage);
@@ -87,6 +90,19 @@ export const removeNoteFromTicket = createAsyncThunk(
   }
 );
 
+export const deleteTicket = createAsyncThunk(
+  "tickets/deleteTicket",
+  async (id, thunkApi) => {
+    try {
+      const token = thunkApi.getState().auth.user.token;
+      return await ticketService.deleteTicket(id, token);
+    } catch (error) {
+      const errorMessage = error.response.data.message;
+      return thunkApi.rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const ticketSlice = createSlice({
   name: "tickets",
   initialState,
@@ -101,28 +117,14 @@ export const ticketSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getOpenTickets.pending, (state) => {
+      .addCase(getAllTickets.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getOpenTickets.fulfilled, (state, action) => {
+      .addCase(getAllTickets.fulfilled, (state, action) => {
         state.isLoading = false;
         state.tickets = action.payload;
       })
-      .addCase(getOpenTickets.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.errorMessage = action.payload;
-      });
-
-    builder
-      .addCase(getClosedTickets.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getClosedTickets.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.tickets = action.payload;
-      })
-      .addCase(getClosedTickets.rejected, (state, action) => {
+      .addCase(getAllTickets.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.errorMessage = action.payload;
@@ -179,6 +181,20 @@ export const ticketSlice = createSlice({
         state.ticket = action.payload;
       })
       .addCase(removeNoteFromTicket.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.errorMessage = action.payload;
+      });
+
+    builder
+      .addCase(deleteTicket.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTicket.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.ticket = action.payload;
+      })
+      .addCase(deleteTicket.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.errorMessage = action.payload;

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAuthStatus } from "../hooks/useAuthStatus";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +11,8 @@ function Navbar() {
   const { isLoggedIn } = useAuthStatus();
   const { user } = useSelector((state) => state.auth);
 
+  const [showUtils, setShowUtils] = useState(false);
+
   if (!isLoggedIn) {
     return null;
   }
@@ -20,22 +23,65 @@ function Navbar() {
     navigate("/");
   };
 
+  const handleUtilsHover = () => {
+    setShowUtils(true);
+  };
+
+  const handleUtilsLeave = () => {
+    setShowUtils(false);
+  };
+
   if (isLoggedIn && user) {
     return (
-      <div id="sidebar">
-        {/* Sidebar Content */}
+      // <div id="navbar">
+      //   {/* Sidebar Content */}
+      //   <Link to="/dashboard">Dashboard</Link>
+      //   <Link to="/active-tickets">Open Tickets</Link>
+      //   {user.isAdmin && (
+      //     <div>
+      //       <Link to="/all-tickets">All Tickets</Link>
+      //       <Link to="#">Create Ticket</Link>
+      //       <Link to="#">User Actions</Link>
+      //       <Link
+      //         to="#"
+      //         className={showUtils ? "show-utils" : ""}
+      //         onMouseEnter={handleUtilsHover}
+      //         onMouseLeave={handleUtilsLeave}
+      //       >
+      //         Utils
+      //         <div className="utils-options">
+      //           <Link to="#">Option 1</Link>
+      //           <Link to="#">Option 2</Link>
+      //           <Link to="#">Option 3</Link>
+      //         </div>
+      //       </Link>
+      //     </div>
+      //   )}
+
+      //   <button onClick={handleLogout}>Log out</button>
+      // </div>
+      <div className="navbar">
         <Link to="/dashboard">Dashboard</Link>
-        <Link to="/active-tickets">Open Tickets</Link>
+        <Link to="/active-tickets">Active Tickets</Link>
         {user.isAdmin && (
           <>
-            <Link to="#">All Tickets</Link>
-            <Link to="#">Create Ticket</Link>
-            <Link to="#">User Actions</Link>
-            <Link to="#">Utils</Link>
+            <Link to="/all-tickets">All Tickets</Link>
+            <div className="dropdown">
+              <button className="dropbtn">
+                Utils
+                <i className="fa fa-caret-down" />
+              </button>
+              <div className="dropdown-content">
+                <Link to="#">Create User</Link>
+                <Link to="#">View Users</Link>
+                <Link to="#">Create Product</Link>
+              </div>
+            </div>
           </>
         )}
-
-        <button onClick={handleLogout}>Log out</button>
+        <div className="right">
+          <button onClick={handleLogout}>Log out</button>
+        </div>
       </div>
     );
   }

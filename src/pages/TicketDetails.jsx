@@ -6,7 +6,10 @@ import {
   getTicketById,
   addNewNoteToTicket,
   removeNoteFromTicket,
+  deleteTicket
 } from "../features/tickets/ticketSlice";
+
+import MainContainer from "../components/shared/MainContainer";
 
 function TicketDetails() {
   const dispatch = useDispatch();
@@ -54,11 +57,24 @@ function TicketDetails() {
     }
   };
 
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this ticket?")) {
+      dispatch(deleteTicket(ticketId));
+      navigate(-1);
+    }
+  };
+
+
   // if (isLoading) return <Spinner />;
 
   return (
-    <div>
+    <MainContainer>
       <button onClick={goBack}>Back</button>
+      {user.isAdmin && (
+          <>
+            <button onClick={handleDelete}>Delete</button>
+          </>
+        )}
       {ticket.status === "open" ? <p style={{ color: "green" }}>Open</p> : ""}
 
       {ticket.status === "in-progress" ? (
@@ -174,7 +190,7 @@ function TicketDetails() {
           <button onClick={() => setShowNoteInput(false)}>Cancel</button>
         </div>
       )}
-    </div>
+    </MainContainer>
   );
 }
 

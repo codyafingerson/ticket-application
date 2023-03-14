@@ -92,6 +92,18 @@ export const removeNoteFromTicket = async (id, noteId, token) => {
     return response.data;
 };
 
+export const deleteTicket = async (id, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.delete(`${ticketUrl}/${id}`, config);
+
+    return response.data;
+}
+
 const ticketService = {
     getOpenTickets,
     getClosedTickets,
@@ -99,6 +111,7 @@ const ticketService = {
     getTicketById,
     addNewNoteToTicket,
     removeNoteFromTicket,
+    deleteTicket
 };
 
 export default ticketService;

@@ -10,6 +10,9 @@ import Dashboard from "./pages/Dashboard";
 import ActiveTickets from "./pages/ActiveTickets";
 import TicketDetails from "./pages/TicketDetails";
 
+// Admin pages
+import AllTickets from "./pages/AllTickets";
+
 function App() {
   return (
     <Router>
@@ -26,6 +29,10 @@ function App() {
 
           <Route path="/ticket/:ticketId" element={<ProtectedRoute />}>
             <Route path="/ticket/:ticketId" element={<TicketDetails />} />
+          </Route>
+
+          <Route path="/all-tickets" element={<ProtectedRoute adminRoute={true}/>}>
+            <Route path="/all-tickets" element={<AllTickets />} />
           </Route>
 
           <Route
