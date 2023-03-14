@@ -18,8 +18,14 @@ export const login = async (username, password) => {
     return data;
 }
 
-export const register = async (userData) => {
-    const { data } = await axios.post(`${userUrl}/register`, userData);
+export const register = async (userData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const { data } = await axios.post(`${userUrl}/register`, userData, config);
     return data;
 }
 

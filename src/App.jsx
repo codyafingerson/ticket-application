@@ -52,8 +52,10 @@ function App() {
           
           <Route
             path="/not-authorized"
-            element={<h1>User not authorized</h1>}
+            element={<h1>You are not authorized to view this page</h1>}
           />
+
+          <Route path="*" element={<h1>Page not found</h1>} />
         </Routes>
     </Router>
   );
